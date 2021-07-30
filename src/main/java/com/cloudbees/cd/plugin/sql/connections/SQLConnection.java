@@ -39,6 +39,7 @@ public class SQLConnection implements DatabaseConnection {
     this.password = password;
   }
 
+  @SuppressWarnings("java:S2095")
   public Connection connect(boolean autoCommit) throws Exception {
     Connection connection = null;
 
@@ -51,17 +52,6 @@ public class SQLConnection implements DatabaseConnection {
     }
 
     return connection;
-  }
-
-  public void disconnect(Connection con) throws Exception {
-    try {
-      if (con != null) {
-        con.close();
-      }
-    } catch (SQLException ex) {
-      ex.printStackTrace();
-      throw new Exception("Could not close connection to database: " + ex.getMessage(), ex);
-    }
   }
 
   public String getJDBCUrl() {

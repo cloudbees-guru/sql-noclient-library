@@ -21,18 +21,16 @@ public class QueryExecutor {
 
    public void executeQuery(String query, boolean autoCommit) throws Exception {
      System.out.println("Found 1 query to execute:\n" + query);
-     Connection connection = null;
-     try {
-       connection = dbConnection.connect(autoCommit);
-       Statement st = connection.createStatement();
+
+     try (
+             Connection connection =dbConnection.connect(autoCommit);
+             Statement st = connection.createStatement();
+             ) {
        st.execute(query);
        connection.commit();
-       st.close();
      } catch (SQLException e) {
        e.printStackTrace();
        throw new Exception("Error while executing the queries: " + e.getMessage(), e);
-     } finally {
-        dbConnection.disconnect(connection);
      }
 
    }
@@ -44,21 +42,18 @@ public class QueryExecutor {
       System.out.println(q);
     }
 
-    Connection connection = null;
-    try {
-      connection = dbConnection.connect(autoCommit);
-      Statement st = connection.createStatement();
+    try (
+            Connection connection =dbConnection.connect(autoCommit);
+            Statement st = connection.createStatement();
+            ) {
       for (String q : queries) {
         st.addBatch(q);
       }
       st.executeBatch();
       connection.commit();
-      st.close();
     } catch (SQLException e) {
       e.printStackTrace();
       throw new Exception("Error while executing the queries: " + e.getMessage(), e);
-    } finally {
-      dbConnection.disconnect(connection);
     }
   }
 
